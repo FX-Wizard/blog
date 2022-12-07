@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://blog.fx-wizard.com/'
 languageCode = 'en-us'
 title = 'FX-Wizard Blog'
 theme = "terminal"
