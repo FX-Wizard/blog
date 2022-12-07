@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Mac Like Linux Edit Station :: FX-Wizard Blog</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Editors cloud dreamstation Software
+Davinci Resolve Kdenlive Base system setup Ubuntu 22.04 base
+update the system
+sudo apt get update &amp;amp;&amp;amp; sudo apt get upgrade -y reboot to load the latest kernel updates
+Install AWS CLI
+sudo apt install awscli sudo apt install nfs-common cifs-utils Nvidia drivers Install DKMS to prevent headaches when updating
+sudo apt install dkms need to add IAM role for read only access to s3
+aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ ." />
+<meta name="keywords" content=", " />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="http://example.org/posts/mac-like-linux-edit-station/" />
+
+
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/red-local.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="http://example.org/img/theme-colors/red.png">
+  <link rel="apple-touch-icon" href="http://example.org/img/theme-colors/red.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Mac Like Linux Edit Station">
+<meta property="og:description" content="Editors cloud dreamstation Software
+Davinci Resolve Kdenlive Base system setup Ubuntu 22.04 base
+update the system
+sudo apt get update &amp;amp;&amp;amp; sudo apt get upgrade -y reboot to load the latest kernel updates
+Install AWS CLI
+sudo apt install awscli sudo apt install nfs-common cifs-utils Nvidia drivers Install DKMS to prevent headaches when updating
+sudo apt install dkms need to add IAM role for read only access to s3
+aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ ." />
+<meta property="og:url" content="http://example.org/posts/mac-like-linux-edit-station/" />
+<meta property="og:site_name" content="FX-Wizard Blog" />
+
+  
+  
+  <meta property="og:image" content="http://example.org/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2022-12-01 23:15:04 &#43;1100 AEDT" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="red">
+
+
+<div class="container headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    FX WIZARD BLOG
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="https://fx-wizard.com">Home</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="https://fx-wizard.com">Home</a></li>
+        
+      
+        
+          <li><a href="/showcase">Showcase</a></li>
+        
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://example.org/posts/mac-like-linux-edit-station/">Mac Like Linux Edit Station</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2022-12-01 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="http://example.org/tags/tech/">tech</a>&nbsp;
+      
+      #<a href="http://example.org/tags/aws/">aws</a>&nbsp;
+      
+      #<a href="http://example.org/tags/linux/">linux</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="editors-cloud-dreamstation">Editors cloud dreamstation<a href="#editors-cloud-dreamstation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Software</p>
+<ul>
+<li>Davinci Resolve</li>
+<li>Kdenlive</li>
+</ul>
+<h2 id="base-system-setup">Base system setup<a href="#base-system-setup" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Ubuntu 22.04 base</p>
+<p>update the system</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt get update <span style="color:#f92672">&amp;&amp;</span> sudo apt get upgrade -y
+</span></span></code></pre></div><p>reboot to load the latest kernel updates</p>
+<p>Install AWS CLI</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install awscli
+</span></span><span style="display:flex;"><span>sudo apt install nfs-common cifs-utils
+</span></span></code></pre></div><h2 id="nvidia-drivers">Nvidia drivers<a href="#nvidia-drivers" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Install DKMS to prevent headaches when updating</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install dkms
+</span></span></code></pre></div><p><em>need to add IAM role for read only access to s3</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ .
+</span></span><span style="display:flex;"><span>chmod u+x NVIDIA*.run
+</span></span><span style="display:flex;"><span>sudo ./NVIDIA*.run
+</span></span></code></pre></div><p>Enable multi-montior support</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo nvidia-xconfig --preserve-busid --enable-all-gpus --connected-monitor<span style="color:#f92672">=</span>DFP-0,DFP-1,DFP-2,DFP-3
+</span></span></code></pre></div><h2 id="desktop-environment">Desktop environment<a href="#desktop-environment" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Install Pantheon from Elemtary OS</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo add-apt-repository ppa:elementary-os/stable
+</span></span><span style="display:flex;"><span>sudo apt-get update
+</span></span><span style="display:flex;"><span>sudo apt-get install elementary-desktop
+</span></span></code></pre></div><p>Make sure to select gdm3 because NiceDCV does not like to work with anything else. (attach screenshots)</p>
+<p>Set defaul session to Pantheon</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo sed <span style="color:#e6db74">&#39;s/Session=/Session=pantheon/&#39;</span> /var/lib/AccountsService/users/cinnamon
+</span></span></code></pre></div><h2 id="pixel-streaming-with-nicedcv">Pixel streaming with NiceDCV<a href="#pixel-streaming-with-nicedcv" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Download NiceDCV</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://d1uj6qtbmh3dt5.cloudfront.net/2022.2/Servers/nice-dcv-2022.2-13907-ubuntu2204-x86_64.tgz
+</span></span></code></pre></div><p>extract</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tar zxvf *nice-dcv*
+</span></span></code></pre></div><p>open extraced folder</p>
+<p>install everything in the folder</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install -y ./*.deb
+</span></span></code></pre></div><p>autostart DCV console session (not working!)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo sed <span style="color:#e6db74">&#39;s/#create-session = true/create-session = true/&#39;</span> /etc/dcv/dcv.conf
+</span></span><span style="display:flex;"><span>sudo sed <span style="color:#e6db74">&#39;s/#owner = &#34;&#34;/owner=&#34;ubuntu&#34;/&#39;</span> /etc/dcv/dcv.conf
+</span></span></code></pre></div><p>Add the dcv user to the video group</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo usermod -aG video dcv
+</span></span></code></pre></div><p>Enable the DCV service</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl enable --now dcvserver
+</span></span></code></pre></div><p>Switch Linux to graphical mode</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl set-default graphical.target
+</span></span><span style="display:flex;"><span>sudo systemctl isolate graphical.target
+</span></span></code></pre></div><h2 id="last-steps">Last Steps<a href="#last-steps" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Dont forget to set a password</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo passwd ubuntu
+</span></span></code></pre></div><p>reboot</p>
+<p>log in to DCV</p>
+<h1 id="software-setup">Software setup<a href="#software-setup" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="good">Good<a href="#good" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="installing-davinci-resolve">Installing DaVinci Resolve<a href="#installing-davinci-resolve" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Resolve needs some extra packages installed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt install libxcb-composite0 libxcb-cursor0
+</span></span></code></pre></div><p>Welcome to resolve page might be blank on first start</p>
+<h3 id="ulauncher">Ulauncher<a href="#ulauncher" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>spotlight like search on Linux</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo add-apt-repository ppa:agornostal/ulauncher
+</span></span><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install ulauncher -y
+</span></span></code></pre></div>
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2022 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+        <span>:: Theme made by <a href="https://twitter.com/panr">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'FX-Wizard Blog'
+theme = "terminal"
+
+[params]
+    # ["orange", "blue", "red", "green", "pink"]
+    themeColor = "green"
+
+
+[languages]
+    [languages.en]
+        languageName = "English"
+        title = "FX-Wizard Blog"
+        subtitle = "A simple, retro theme for Hugo"
+
+    [languages.en.params.logo]
+        logoText = "FX WIZARD BLOG"
+        logoHomeLink = "/"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "home"
+        name = "Home"
+        url = "https://fx-wizard.com"
+      [[languages.en.menu.main]]
+        identifier = "showcase"
+        name = "Showcase"
+        url = "/showcase"

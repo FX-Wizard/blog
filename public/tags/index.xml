@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on FX-Wizard Blog</title>
+    <link>http://example.org/tags/</link>
+    <description>Recent content in Tags on FX-Wizard Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 07 Dec 2022 14:39:44 +1100</lastBuildDate><atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>aws</title>
+      <link>http://example.org/tags/aws/</link>
+      <pubDate>Wed, 07 Dec 2022 14:39:44 +1100</pubDate>
+      
+      <guid>http://example.org/tags/aws/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>tech</title>
+      <link>http://example.org/tags/tech/</link>
+      <pubDate>Thu, 01 Dec 2022 13:53:45 +1100</pubDate>
+      
+      <guid>http://example.org/tags/tech/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+  </channel>
+</rss>
