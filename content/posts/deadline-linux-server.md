@@ -17,7 +17,7 @@ color = "" #color from the theme settings
 
 **Which Linux Distro?**
 
-This example uses [Debian 11](https://www.debian.org/), however any major distro should work.
+This example uses [Ubuntu 20.04 LTS](https://ubuntu.com/), however any major distro should work.
 
 
 **How much CPU & RAM?**
@@ -26,7 +26,8 @@ For 20-30 render nodes the server needs about 2 CPU cores and 4GB of ram
 
 If hosting on AWS the t3a instance type works well for about 20 nodes
 
-**Common Termonology**
+**Common Terminology**
+
 Here are a few common Deadline terms and their meanings.
 
 Repository and Worker are the 2 main components of a Deadline render farm.
@@ -38,30 +39,72 @@ Direct connect and Remote Connection Server (RCS) are 2 common terms that freque
 
 - Direct Connect = Network share mounted on the Workers that allows the Repository and Workers to directly share files. This is the older method.
 
-- Remote Connection Server (RCS) = HTTP client that sits in between the Repository and Workers and allows them to communicate securly over HTTPS. This is the newer method.
+- Remote Connection Server (RCS) = HTTP client that sits in between the Repository and Workers and allows them to communicate securely over HTTPS. This is the newer method.
 
 
 ---
-## Downloading software
 
-**MongoDB**
+## Preparing the server
 
-Deadline needs mongodb 4.2.x
-
-The Deadline repository installer wants the tarball package
-
-MongoDB downloads page can be found [here](https://www.mongodb.com/try/download/community).
+**Running updates**
 
 ```bash
-wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian10-4.2.24.tgz
+sudo apt update
+sudo apt upgrade -y
 ```
 
-**Deadline**
+*Make sure to reboot after updates to load any new libs/kernels*
+
+
+**Setting the servers hostname**
+
+MongoDB needs to know what the servers hostname is to work correctly and it helps to give it a name that makes sense like deadline.
+```bash
+sudo hostnamectl set-hostname deadline
+```
+
+If hosting in AWS make sure to update `/etc/cloud/cloud.cfg` and change `preserve_hostname: false` to `true` or it will change the hostname back on next reboot.
+
+```bash
+sudo sed -i 's/preserve_hostname: false/preserve_hostname: true/' /etc/cloud/cloud.cfg
+```
+
+---
+
+## Downloading software
+
+#### MongoDB
+
+Deadline uses Mongodb for its database. 
+As of writing Deadline needs version 4.4.x of Mongodb.
+
+The installer can automatically download MongoDB for supported OS like Ubuntu 20.04, so this step may not be necessary. However for unsupported OS you need to manually download MongoDB and supply it to the installer.
+
+MongoDB downloads page can be found [here](https://www.mongodb.com/try/download/community). The Deadline repository installer wants the tarball package
+
+For example if installing Deadline Repository on Debian 10
+
+```bash
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian10-4.4.23.tgz
+```
+
+> [!WARNING]
+> libcrypto.so.1.1
+
+Mongo 4.4.x depends on libcrypto.so.1.1 which does not ship with modern Linux distos like Debian 12 or Ubuntu 22.04.
+
+You may get an error like:
+
+`mongod: error while loading shared libraries: libcrypto.so.1.1: cannot open shared object file: No such file or directory`
+
+Unfortunaly symlinking to the new libcrypto does not work so the easiest solution is to install an older OS like Debian 10 or Ubuntu 20.04.
+
+#### Deadline
 
 http://downloads.thinkboxsoftware.com/
 
 ```bash
-wget https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.2/3_10.2.0.10/Deadline-10.2.0.10-linux-installers.tar
+wget https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.3/1_10.3.0.9/Deadline-10.3.0.9-linux-installers.tar
 ```
 
 To validate the installers follow the instructions [here](https://docs.thinkboxsoftware.com/products/deadline/10.2/1_User%20Manual/manual/validation-linux-installers.html#validation-linux-installers-ref-label).
@@ -86,35 +129,30 @@ Create entry in /etc/fstab so the folder automounts on start up
 <ip-address>:/share/dir /opt/Thinkbox/DeadlineRepository10 nfs nfsvers=4.1 0 1
 ```
 
-*note*
-
-*Some distros like Debian don't come out of the box with the nesicarry packages to mount network drives installed by default.*
-
-*To install on Debian*
-```bash
-# SMB
-sudo apt install -y cifs-utils
-# NFS
-sudo apt install -y nfs-common
-```
+> Note
+> 
+> *Some distros don't come out of the box with the necessary packages to mount network drives installed by default.*
+>
+> *To install on Debian or Ubuntu*
+> ```bash
+> # SMB
+> sudo apt install -y cifs-utils
+> # NFS
+> sudo apt install -y nfs-common
+> ```
+>
+> *To install on CentOS or Rocky*
+> ```bash
+> sudo yum install -y cifs-utils
+> ```
 
 ---
 ## Install Repository
 
-**Setting the servers hostname**
-
-MongoDB needs to know what the servers hostname is to work correctly and it helps to give it a name that makes sense like deadline.
-```bash
-sudo hostnamectl set-hostname deadline
-```
-
-If hosting in AWS make sure to update `/etc/cloud/cloud.cfg` and change `preserve_hostname: false` to `true` or it will change the hostname back on next reboot.
-
-
-**Extra dependancies**
+**Extra dependencies**
 If using SSL/TLS certificates the installer needs bunzip2 to be installed
 
-Debian 11 does not have bunzip2 by default. To install it run 
+To install it run 
 
 ```bash
 sudo apt install -y bzip2
@@ -135,7 +173,7 @@ The installer will take a moment to extract and start.
 
 ```
 ----------------------------------------------------------------------------
-Welcome to the Deadline Repository 10.2.0.10 Setup Wizard.
+Welcome to the Deadline Repository 10.3.0.9 Setup Wizard.
 
 ----------------------------------------------------------------------------
 Please read the following License Agreement. You must accept the terms of this 
@@ -230,7 +268,7 @@ The MongoDB installer was already downloaded in [this section](#downloading-soft
 *press 2 then enter*
 
 ```
-Pre-packaged Binaries []: /home/admin/mongodb-linux-x86_64-debian10-4.2.24.tgz
+Pre-packaged Binaries []: /home/admin/mongodb-linux-x86_64-debian10-4.4.23.tgz
 ```
 Enter the path to where the installer file was downloaded then press enter.
 
@@ -252,7 +290,7 @@ reach this database.
 
 MongoDB Hostname [deadline;127.0.0.1]: deadline;<host ip address>
 ```
-By Default the installer chooses the loopback IP address which can cause problems. This is the address clients will use to connect to the MongoDB server. Enter the hostname and ipaddress sepperated by `;`
+By Default the installer chooses the loopback IP address which can cause problems. This is the address clients will use to connect to the MongoDB server. Enter the hostname and ip address sepperated by `;`
 
 ```
 MongoDB Port [27100]: 
@@ -287,7 +325,7 @@ Accept the default value
 ```
 Certificate Password :
 ```
-If using RCS only this is unessicary as the key will remain secure on the server and not shared with the clients.
+If using RCS only this is unnecessary as the key will remain secure on the server and not shared with the clients.
 
 If using Direct Connect then its a good idea to password protect the certificate as it will need to be shared with all the clients connecting to the MongoDB database.
 
@@ -323,7 +361,7 @@ credentials as they will later be used to access secrets.
 
 Admin Username []: 
 ```
-Pick a username for the key admin
+Pick a user name for the key admin
 
 ```
 Passwords must be at least 8 characters long and contain at least one lowercase 
@@ -362,14 +400,22 @@ Deadline Repository should now be installed and running. If you want to use a di
 
 ## Install Remote Connection Server (RCS)
 
-**preperation**
+The Remote Connection Server acts as a relay between the clients and server. In this example the RCS is installed on the same server as the Deadline Repository, however it can be run on a seperate server.
+
+**preparation**
+
+Create user account for RCS to run as
+
+```bash
+sudo useradd -m deadline
+```
 
 Before starting the permissions for the deadline certificate need to be changed so the RCS can run as a normal user.
 
-Currently root owns the certificate, so change the owner to the user that the RCS service will run as, which in this case is `admin`.
+Currently root owns the certificate, so change the owner to the user that the RCS service will run as, which in this case is `deadline`.
 
 ```bash
-sudo chown admin: /opt/Thinkbox/DeadlineDatabase10/certs/Deadline10Client.pfx
+sudo chown deadline: /opt/Thinkbox/DeadlineDatabase10/certs/Deadline10Client.pfx
 ```
 
 **installation**
@@ -501,11 +547,11 @@ OS User Credentials
 Please enter the name of the user that will be running the Remote Connection 
 Server. Note: This user must have access to the database certificate.
 
-Username [root]: admin
+Username [root]: deadline
 ```
-Not reccomended to use root. This example is using an already existing user account called `admin`.
+Not recommended to use root. This example is using an already existing user account called `deadline`.
 
-*type admin then enter*
+*type deadline then enter*
 
 ```
 ----------------------------------------------------------------------------
@@ -516,7 +562,7 @@ assign a server role and grant master key access to the this machine.
 
 Admin Username []:
 ```
-Enter the Secrets Manager admin username created during the repository installation.
+Enter the Secrets Manager admin user name created during the repository installation.
 
 ```
 Passwords must be at least 8 characters long and contain at least one lowercase 
@@ -544,6 +590,11 @@ The Launcher allows for remote communication between Deadline Clients.
 
 Install Launcher As A Daemon [y/N]: 
 ```
+
+This will create a service that starts the Launcher when the system boots up.
+
+I prefer to create my own service to start RCS and avoid unwanted services from starting with Launcher such as the Worker service.
+
 No need to run the launcher as a Daemon.
 
 *press enter*
@@ -566,9 +617,9 @@ Auto upgrade is a very useful feature when managing a large render farm on-prem.
 ----------------------------------------------------------------------------
 Remote Connection Server (RCS)
 
-User/Group running the RCS [admin]: 
+User/Group running the RCS [admin]: deadline
 ```
-The installer has remembered the setting from earlier.
+Enter the user name from the user created earlier.
 
 *press enter*
 
@@ -647,7 +698,7 @@ connection time (recommended).
 
 Certificate Password :
 ```
-Not nessicary unless sharing the certificate with clients or moving it off the server.
+Not necessary unless sharing the certificate with clients or moving it off the server.
 
 *press enter*
 
@@ -668,21 +719,29 @@ Please wait while Setup installs Deadline Client on your computer.
  ########################################
 ```
 
+Congratulations! The Deadline Repository is now set up and ready for Workers to connect to it and render.
+
 ### Create systemd service to auto launch RCS on startup
+To ensure Deadline RCS starts when the server is rebooted we need to create a systemd service. 
+
+*Note: If you selected run Launcher as daemon this step is unnecessary.*
+
 Create service file in `/etc/systemd/system/`
 
 Below is a template, if you did not use the same user/install path as this instruction make sure to update `User` `Group` and `ExecStart` with the correct details.
 
+You will need to change the `User` and `Group` values to the name of the uesr that runs Deadline RCS.
+
 ```bash
-cat >> /etc/systemd/system/deadlinercs.service << EOF
+cat << EOF >> /etc/systemd/system/deadlinercs.service
 [Unit]
 Description=Deadline Remote Connection Server
 After=network.target
 
 [Service]
 Type=simple
-User=admin
-Group=admin
+User=deadline
+Group=deadline
 ExecStart=/opt/Thinkbox/Deadline10/bin/deadlinercs
 RemainAfterExit=true
 
@@ -696,35 +755,39 @@ Enable and start the service
 systemctl enable --now deadlinercs.service
 ```
 
-Check to see if the service started sucessfully
+Check to see if the service started successfully
 ```bash
 systemctl status deadlinercs.service
 ```
 
->### Troubleshooting
->If this error appears after installation it means that the user running the RCS server was unable to read the repository certificate. Change the owner of the repository certificate to the user running the RCS server and reinstall RCS.
->```
->Warning: Problem running post-install step. Installation may not complete 
->correctly
-> Secrets Management: Failed to assign a Server role and grant key access to this 
->machine. You will need to run 'deadlinecommand Secrets ConfigureServerMachine' 
->after the installation. Check the bitrock_installer log file in /tmp for more 
->information.
->Press [Enter] to continue:
->```
+---
+
+### What next?
+
+Now that you have a your Deadline Repository set up, you need some render nodes to connect to it. 
+
+[Follow this guide here to continue building your own render farm.](../deadline-linux-worker)
 
 ---
-## Connecting to the Repository
 
-To connect to the repository via CLI
+### Troubleshooting
 
-Copy the RCS certificate to the client
-If 
-/opt/Thinkbox/Deadline10/certs/Deadline10RemoteClient.pfx
+If this error appears after installation it means that the user running the RCS server was unable to read the repository certificate. Change the owner of the repository certificate to the user running the RCS server and reinstall RCS.
+
+```
+Warning: Problem running post-install step. Installation may not complete 
+correctly
+ Secrets Management: Failed to assign a Server role and grant key access to this 
+machine. You will need to run 'deadlinecommand Secrets ConfigureServerMachine' 
+after the installation. Check the bitrock_installer log file in /tmp for more 
+information.
+Press [Enter] to continue:
+```
+
+---
 
 
-
-### Troubleshooting Deadline Connection Issues
+#### Logs and errors
 
 Deadline logs are kept in `/var/log/Thinkbox/Deadline10`
 
