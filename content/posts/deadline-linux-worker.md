@@ -18,7 +18,7 @@ color = "" #color from the theme settings
 **Which Linux Distro?**
 
 This example uses [Rocky 8](https://rockylinux.org/), however any major distro should work.
-Rocky Linux is officially supported by industry standard software such as Autodesk Maya making it an ideal choice for rendering.
+Rocky 8 Linux is officially supported by industry standard software such as Autodesk Maya making it an ideal choice for rendering.
 
 **Preparation**
 
@@ -52,7 +52,14 @@ The default location of the certificate on the Repository is:
 /opt/Thinkbox/Deadline10/certs/Deadline10RemoteClient.pfx
 ```
 
-`scp` is one method you could use to copy the certificate. For example.
+`scp` is one method you could use to copy the certificate. scp works like the regular cp command except it copies over SSH, so you can use it to copy files from one remote server to with SSH to another. 
+
+For example.
+```
+scp <user name>@<server>:/opt/Thinkbox/Deadline10/certs/Deadline10RemoteClient.pfx <user name>@<worker>:/path/to/folder/
+```
+
+make sure to replace <user name> with the actual user account name, and replace server and worker with their respective IP address like below.
 ```bash
 scp ubuntu@deadline:/opt/Thinkbox/Deadline10/certs/Deadline10RemoteClient.pfx rocky@worker:/home/rocky/
 ```
@@ -280,7 +287,9 @@ Once installation is complete the Deadline Launcher should start automatically a
 To check if the Worker has sucessfully connected to the Repository via CLI
 
 ```bash
-/opt/Thinkbox/Deadline10/bin/deadlinecommand -GetFarmStatistics
+/opt/Thinkbox/Deadline10/bin/deadlinecommand GetSlaveNames
 ```
+
+If you see the hostname of your new render worker appear in the list congrats! Your render worker is now ready to render.
 
 More info on using deadlinecommand can be found [here](https://docs.thinkboxsoftware.com/products/deadline/10.3/1_User%20Manual/manual/command.html)
