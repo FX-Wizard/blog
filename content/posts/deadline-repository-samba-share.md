@@ -175,6 +175,27 @@ For Linux
 mount -t cifs //deadline/deadline /mnt/deadline
 ```
 
+To autmoatically mount the drive on start
+
+```bash
+cat << EOF >> /etc/fstab
+# Deadline Repository network share
+//deadline/deadline /mnt/deadline cifs rw,auto,noperm,user=deadline,password=<your password>,file_mode=0777,dir_mode=0777 1 1
+EOF
+mount /mnt/deadline
+```
+
+> [!Note]
+> If you get this error
+> ```
+> mount: /mnt/deadline: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.<type> helper program.
+> ```
+> You might not have the cifs-utils installed.
+> Heres how to install it on Debian/Ubuntu.
+> ```bash
+> sudo apt install cifs-utils
+> ```
+
 For Windows using cmd
 ```cmd
 net use R: \\deadline\deadline
