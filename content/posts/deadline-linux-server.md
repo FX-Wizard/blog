@@ -19,12 +19,14 @@ color = "" #color from the theme settings
 
 This example uses [Ubuntu 20.04 LTS](https://ubuntu.com/), however any major distro should work.
 
+> [!Note]
+> Newer versions of Linux, like Ubuntu 22.04 no longer ship with libcrypto.so.1.1. This is a requirement for MongoDB 4.4, the database used by the Deadline Repository. If you use a newer Linux you'll need to install the old libcrypto libraries.
 
 **How much CPU & RAM?**
 
 For 20-30 render nodes the server needs about 2 CPU cores and 4GB of ram
 
-If hosting on AWS the t3a instance type works well for about 20 nodes
+If hosting on AWS the t3a.medium instance type works well for about 20 nodes
 
 **Common Terminology**
 
@@ -73,12 +75,13 @@ sudo sed -i 's/preserve_hostname: false/preserve_hostname: true/' /etc/cloud/clo
 
 ## Downloading software
 
+This section explains how to download Deadline and MongoDB.
+
 #### MongoDB
 
-Deadline uses Mongodb for its database. 
-As of writing Deadline needs version 4.4.x of Mongodb.
+Deadline uses Mongodb for its database. As of writing Deadline needs version 4.4.x of Mongodb.
 
-The installer can automatically download MongoDB for supported OS like Ubuntu 20.04, so this step may not be necessary. However for unsupported OS you need to manually download MongoDB and supply it to the installer.
+The installer can automatically download MongoDB for supported OS like Ubuntu 20.04, if that's what you're using [skip to the next step](/posts/deadline-linux-server/#deadline). If your OS is unsupported you need to manually download MongoDB and enter the path to where you downloaded it into the installer.
 
 MongoDB downloads page can be found [here](https://www.mongodb.com/try/download/community). The Deadline repository installer wants the tarball package
 
@@ -91,15 +94,17 @@ wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian10-4.4.23.tgz
 > [!WARNING]
 > libcrypto.so.1.1
 
-Mongo 4.4.x depends on libcrypto.so.1.1 which does not ship with modern Linux distos like Debian 12 or Ubuntu 22.04.
+Mongo 4.4.x depends on libcrypto.so.1.1 which does not ship with the latest Linux distos like Debian 12 or Ubuntu 22.04.
 
 You may get an error like:
 
 `mongod: error while loading shared libraries: libcrypto.so.1.1: cannot open shared object file: No such file or directory`
 
-Unfortunaly symlinking to the new libcrypto does not work so the easiest solution is to install an older OS like Debian 10 or Ubuntu 20.04.
+To fix this either install the older libcrypto library or install an older OS like Debian 10 or Ubuntu 20.04.
 
 #### Deadline
+
+To download Deadline go to the Thinkbox website and grab the download URL.
 
 http://downloads.thinkboxsoftware.com/
 
@@ -112,21 +117,17 @@ To validate the installers follow the instructions [here](https://docs.thinkboxs
 ---
 ## Prepare repository directory
 
-The Deadline Repository does not need to live on the same server as the Database. Its common practice to put the repository in a file server, like a NAS and install the Database elsewhere, like a virtual machine.
+The Deadline Repository does not need to live on the same server as the Database. Its common practice to put the repository folder itself on a file server, like a NAS, and install the Database elsewhere, like a virtual machine.
 
-For this example the Repository will live in on a NAS with a shared NFS folder.
+For this example the Repository is installed locally so if you want to stick to the guide you can [skip to the next step](/posts/deadline-linux-server/#install-repository).
 
-Create directory on the Deadline a mount point for the repository
+However if you want to put the repository on a file server continue reading and I'll explain how.
+
+This guide assumes you already have an SMB or NFS file share where you want to host the repository. If not make sure to have that prepared before continuing.
+
+Create directory to mount the file share to. This is where the Deadline Repository will be installed.
 ```bash
 sudo mkdir -p /opt/Thinkbox/DeadlineRepository10
-```
-Mount the remote folder to that directory
-```bash
-sudo mount -t nfs <ip-address>:/share/dir /opt/Thinkbox/DeadlineRepository10
-```
-Create entry in /etc/fstab so the folder automounts on start up
-```bash
-<ip-address>:/share/dir /opt/Thinkbox/DeadlineRepository10 nfs nfsvers=4.1 0 1
 ```
 
 > Note
@@ -145,6 +146,16 @@ Create entry in /etc/fstab so the folder automounts on start up
 > ```bash
 > sudo yum install -y cifs-utils
 > ```
+
+Mount the remote folder to that directory
+```bash
+sudo mount -t nfs <ip-address>:/share/dir /opt/Thinkbox/DeadlineRepository10
+```
+
+Create entry in `/etc/fstab` so the folder automounts on start up
+```bash
+<ip-address>:/share/dir /opt/Thinkbox/DeadlineRepository10 nfs nfsvers=4.1 0 1
+```
 
 ---
 ## Install Repository
@@ -248,7 +259,7 @@ MongoDB's open file descriptor limit (ulimit -n) will be set to the recommended 
 
 You can change this limit in /etc/init.d/Deadline10db after the installation has finished, but MongoDB will have to be restarted before it recognizes the change. Refer to the Deadline installation documentation for more information on resource limits.
 
-Do you wish to continue? [Y/n]: 
+Do you wish to continue? [Y/n]:
 ```
 Accept the default value
 
@@ -288,9 +299,20 @@ Accept the default value
 This is the hostname and/or IP address at which client machines will attempt to 
 reach this database.
 
-MongoDB Hostname [deadline;127.0.0.1]: deadline;<host ip address>
+MongoDB Hostname [deadline;10.0.10.15]:
 ```
-By Default the installer chooses the loopback IP address which can cause problems. This is the address clients will use to connect to the MongoDB server. Enter the hostname and ip address sepperated by `;`
+
+> [!Note] the installer may use the loopback IP address `127.0.0.1` as the default option. If this is the case for your installation you need to add the correct IP address or it will throw an error.
+> 
+> If you don't know the ip you can find it using the below command which list all the IP addresses in use.
+> ```bash
+> ip address | grep inet
+> ```
+> If you have multiple network interfaces the command will list the IP addresses for all of them. You will need to choose the one you intend for the clients to connect to.
+
+
+By Default the installer chooses the loopback IP address which can cause problems. This is the address clients will use to connect to the MongoDB server. Enter the hostname and ip address sepperated by `;` For example `deadline;10.0.10.15`
+
 
 ```
 MongoDB Port [27100]: 
@@ -732,6 +754,7 @@ Below is a template, if you did not use the same user/install path as this instr
 
 You will need to change the `User` and `Group` values to the name of the uesr that runs Deadline RCS.
 
+> [!Note] you need root permissions, `sudo su`
 ```bash
 cat << EOF >> /etc/systemd/system/deadlinercs.service
 [Unit]
