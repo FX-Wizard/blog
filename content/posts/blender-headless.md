@@ -64,7 +64,7 @@ sudo apt install -y libxrender1 libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libs
 
 Rocky Linux or Fedora
 ```bash
-sudo dnf install -y libXxf86vm libXfixes libXi libSM libGL
+sudo dnf install -y libXrender libXxf86vm libXfixes libXi libSM libGL libxkbcommon libEGL mesa-dri-drivers
 ```
 
 And that's really it this time.
