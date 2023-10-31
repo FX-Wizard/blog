@@ -49,10 +49,6 @@ Get the IP address of the instance. Make sure to write this down so you can get 
 ip address | grep inet
 ```
 
-#### SSH into the AppStream image
-
-Currently we only know the private IP of the AppStream image, in order to SSH into it we need a bastion host (jumpbox) in the same VPC in order to access the AppStream image. This is relatively easy to set up so I wont go into it here, just get a simple EC2 instance up and running with the needed access and come back when your ready.
-
 If you try to log in with SSH you may get the bellow error
 
 ```
@@ -67,6 +63,10 @@ To enable passwords with SSH
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 sudo systemctl reload sshd
 ```
+
+#### SSH into the AppStream image
+
+Currently we only know the private IP of the AppStream image, in order to SSH into it we need a bastion host (jumpbox) in the same VPC in order to access the AppStream image. This is relatively easy to set up so I wont go into it here, just get a simple EC2 instance up and running with the needed access and come back when your ready.
 
 ---
 
