@@ -1,5 +1,5 @@
 +++
-title = "Ubuntu Automount Smb With Ad"
+title = "Using AD credentials to auto mount network drive on Ubuntu"
 date = "2023-11-01T11:48:10+11:00"
 author = ""
 authorTwitter = "" #do not include @
