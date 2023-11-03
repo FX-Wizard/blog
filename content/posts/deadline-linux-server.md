@@ -109,8 +109,10 @@ To download Deadline go to the Thinkbox website and grab the download URL.
 http://downloads.thinkboxsoftware.com/
 
 ```bash
-wget https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.3/1_10.3.0.9/Deadline-10.3.0.9-linux-installers.tar
+wget https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.3/4_10.3.0.15/Deadline-10.3.0.15-linux-installers.tar
 ```
+
+*if you get an error downloading check see if new version with a new link is available. This guide is not always up to date with the minor patch versions of Deadline so you'll need to grab the latest link yourself from http://downloads.thinkboxsoftware.com/*
 
 To validate the installers follow the instructions [here](https://docs.thinkboxsoftware.com/products/deadline/10.2/1_User%20Manual/manual/validation-linux-installers.html#validation-linux-installers-ref-label).
 
@@ -281,7 +283,9 @@ The MongoDB installer was already downloaded in [this section](#downloading-soft
 ```
 Pre-packaged Binaries []: /home/admin/mongodb-linux-x86_64-debian10-4.4.23.tgz
 ```
-Enter the path to where the installer file was downloaded then press enter.
+If you are using Ubuntu 20.04 you can press 1 and skip the manual installation and have the installer automatically download MongoDB.
+
+If you are using a different Linux distro enter the path to where the installer file was downloaded then press enter.
 
 ```
 ----------------------------------------------------------------------------
@@ -378,7 +382,7 @@ If planning to use AWS burst rendering in the cloud its a good idea to have Secr
 ----------------------------------------------------------------------------
 Secrets Management Setup - Create Admin User
 
-Specify the credentials to create the initial admin user. Don't forget the 
+Specify the credentials to create the initial admin user. Don't forget these 
 credentials as they will later be used to access secrets. 
 
 Admin Username []: 
@@ -571,9 +575,14 @@ Server. Note: This user must have access to the database certificate.
 
 Username [root]: deadline
 ```
-Not recommended to use root. This example is using an already existing user account called `deadline`.
 
-*type deadline then enter*
+This is the user the RCS service will run as.
+
+If you created the Linux user account earlier you can enter the username for it here. This example is using called the user account `deadline`.
+
+Not recommended to use root.
+
+*type <username> then enter*
 
 ```
 ----------------------------------------------------------------------------
@@ -584,6 +593,9 @@ assign a server role and grant master key access to the this machine.
 
 Admin Username []:
 ```
+
+Earlier in the Repository installation we create a username and password for the secrets manager. We need to enter that same username and password here to give the RCS admin access to secrets.
+
 Enter the Secrets Manager admin user name created during the repository installation.
 
 ```
