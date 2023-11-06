@@ -4,7 +4,7 @@ date = "2023-08-09T21:02:26+10:00"
 author = ""
 authorTwitter = "" #do not include @
 cover = ""
-tags = ["deadline", "linux", "how to", "render farm"]
+tags = ["DEADLINE", "LINUX", "HOW TO", "RENDER FARM"]
 keywords = ["deadline", "aws", "portal", "render farm", "thinkbox"]
 description = ""
 showFullContent = false
@@ -12,6 +12,28 @@ readingTime = false
 hideComments = false
 color = "" #color from the theme settings
 +++
+
+The purpose of the Deadline Portal is to provide a (relatively) easy way to expand a physical Deadline render farm into the cloud. This is often referred to as a hybrid render farm.
+
+Portal handles transferring of assets and managing of worker fleets.
+
+Where you should use it
+- Need to burst quickly in the cloud.
+- Small projects with < 500GB of assets (depending on internet connection).
+- Don't have an existing way of syncing assets to the cloud.
+- Usage based licensing (pay by the hour).
+
+Where it should not be used
+- Large projects with lots of data.
+- Projects with sophisticated asset dependencies.
+- Want to use a cloud provider other than AWS.
+- Not all plug-ins supported by Portal.
+
+It's not perfect, but if your in a pinch and need to get a project out fast it could save you!
+
+---
+
+## Getting started
 
 How to set up Deadline AWS Portal on a dedicated Linux server.
 
@@ -125,12 +147,16 @@ Needs Deadline Client installed on the same server. [Link to instructions here](
 ### Download and extract
 
 ```bash
-curl -O https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.3/1_10.3.0.9/Deadline-10.3.0.9-linux-installers.tar
+curl -O https://thinkbox-installers.s3.us-west-2.amazonaws.com/Releases/Deadline/10.3/4_10.3.0.15/Deadline-10.3.0.15-linux-installers.tar
+```
+
+```bash
+tar xvf Deadline-*-linux-installers.tar
 ```
 
 Run installer
 ```bash
-sudo -E ./AWSPortalLink-1.3.0.3-linux-x64-installer.run
+sudo -E ./AWSPortalLink-*-linux-x64-installer.run
 ```
 
 > **Note**
