@@ -6,7 +6,7 @@ authorTwitter = "" #do not include @
 cover = ""
 tags = ["deadline", "render farm"]
 keywords = ["deadline", "thinkbox", "render farm", "series"]
-description = ""
+description = "Learn how to deploy your own render farm in this series of guides and blog posts about Thinkbox Deadline!"
 showFullContent = false
 readingTime = false
 hideComments = false
@@ -28,7 +28,7 @@ The end objective is to render the Blender demo animation ["Hi, my name is Amy"]
 
 [Blender render node install](/posts/blender-headless)
 
-[Blender Deadline submitter add-on](/posts/blender-deadline)
+[Blender Deadline submitter add-on](/posts/blender-deadline-addon)
 
 ### Hybrid cloud on AWS
 
