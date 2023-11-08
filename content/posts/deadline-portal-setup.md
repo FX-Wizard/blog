@@ -332,10 +332,10 @@ Do you wish to continue? [Y/n]:
 
 If you get this error you'll need to restart the Portal services after the installation. Or just reboot the system.
 ```bash
-systemctl restart awsportallink
-systemctl restart awsportalassetserver
-systemctl restart awsportallinkservice.service
-systemctl restart awsportalassetservershellscript.service
+sudo systemctl restart awsportallink
+sudo systemctl restart awsportalassetserver
+sudo systemctl restart awsportallinkservice.service
+sudo systemctl restart awsportalassetservershellscript.service
 ```
 
 ---
