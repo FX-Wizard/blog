@@ -4,7 +4,7 @@ date = "2023-08-11T10:48:34+10:00"
 author = ""
 authorTwitter = "" #do not include @
 cover = ""
-tags = ["linux", "deadline", "how to"]
+tags = ["LINUX", "DEADLINE", "HOW TO"]
 keywords = ["linux", "samba", "deadline", "thinkbox"]
 description = ""
 showFullContent = false
@@ -167,13 +167,19 @@ It's also possible to have Samba authenticate users against Active Directory, ho
 
 Now that the repository file share is up and running it's time to mount it on the clients.
 
-You will need the IP address or DNS name of the Deadline Repository server. The below assumes your server is called deadline.
+You will need the IP address or DNS name of the Deadline Repository server. The below assumes your server is called `deadline`.
 
 For Linux
 
 ```bash
 mount -t cifs //deadline/deadline /mnt/deadline
 ```
+
+> Note: You need to make sure the directory you are mounting to exists.
+> For example if you want to mount the share to `/mnt/deadline`
+> ```bash
+> sudo mkdir /mnt/deadline
+> ```
 
 To autmoatically mount the drive on start
 
@@ -185,7 +191,13 @@ EOF
 mount /mnt/deadline
 ```
 
-> [!Note]
+If you have set a username and password you'll need to specify it when mounting the shared folder.
+
+```bash
+mount -t cifs //deadline/deadline /mnt/deadline -o username=<your username>
+```
+
+> **Note:**
 > If you get this error
 > ```
 > mount: /mnt/deadline: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.<type> helper program.
@@ -199,6 +211,12 @@ mount /mnt/deadline
 For Windows using cmd
 ```cmd
 net use R: \\deadline\deadline
+```
+
+If you have specifed a username/password
+
+```cmd
+net use R: \\deadline\deadline /user:<your username>
 ```
 
 All that's left to do is connect the Deadline client to the repository, [the instructions for which you can find here.](https://docs.thinkboxsoftware.com/products/deadline/10.3/1_User%20Manual/manual/changing-repository.html)
