@@ -5,13 +5,13 @@ author = ""
 authorTwitter = "" #do not include @
 cover = ""
 draft = true
-tags = ["tech", "aws", "linux"]
-keywords = ["", ""]
+tags = ["TECH", "AWS", "LINUX"]
+keywords = ["editing", "video editing", "linux", "aws"]
 description = ""
 showFullContent = false
 readingTime = false
 hideComments = false
-color = "red" #color from the theme settings
+color = "orange" #color from the theme settings
 +++
 
 
@@ -51,7 +51,7 @@ sudo apt install dkms
 ```bash
 aws s3 cp --recursive s3://ec2-linux-nvidia-drivers/latest/ .
 chmod u+x NVIDIA*.run
-sudo ./NVIDIA*.run
+sudo ./NVIDIA*.run -s --dkms --install-libglvnd
 ```
 
 Enable multi-montior support
