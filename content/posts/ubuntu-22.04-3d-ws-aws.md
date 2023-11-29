@@ -14,7 +14,7 @@ toc = true
 color = "orange" #color from the theme settings
 +++
 
-This is a guide to setting up a 3D workstation in the cloud with Rocky 9 Linux for running application like Blender, Maya, Nuke, etc...
+This is a guide to setting up a 3D workstation in the cloud with Ubuntu 22.04 Linux for running application like Blender, Maya, Nuke, etc...
 
 I also have a dedicated guide for Rocky 9 [here](/posts/rocky-9-3d-ws-aws) if Ubuntu is not your thing.
 
