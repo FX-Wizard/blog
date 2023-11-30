@@ -30,7 +30,7 @@ Some advantages to VS Code over Cloud9.
 - Fast IntelliSense, which really speeds up CDK development.
 - Useful for more than just AWS cloud development.
 
-One big advantage to Cloud9 is it works out of the box. If you want to use Cloud9 you need not read any further since it has almost everything you need for CDK already. However if you are like me and find it clunky or just perfer working with tools your already familiar with then please read on.
+One big advantage to Cloud9 is it works out of the box. If you want to use Cloud9 you need not read any further since it has almost everything you need for CDK already. However if you are like me and find it clunky or just prefer working with tools your already familiar with then please read on.
 
 ## Getting started
 
@@ -40,18 +40,22 @@ Because this guide uses VS Code as the code editor you will need a copy of it in
 
 We will be using the `Remote - SSH` extension to connect the local VS Code to an EC2 instance running in the cloud where all the processing will happen.
 
+---
+
 ## Spinning up an EC2 instance
 
-If you already have an EC2 instance spun up and ready you can skip to the [next step here.](#create-admin-iam-role)
+We need to create an EC2 instance where CDK will run and where the development work will happen.
 
-**Finding the image ID**
+If you already have an EC2 instance spun up with an IAM role giving it access to create resources in your account, you can skip to the [next step here.](#configure-development-environment)
 
-Fist we need to find an image to launch the EC2 instance from. I prefer using Ubuntu due to it being easy to set up, but if you're feeling adventurous you can try a Linux distro of your choosing.
+### Finding the image ID
 
-Make sure to change `--region=` to the region you want to launch in.
+Fist we need to find an image to launch the EC2 instance from. This guide will use Ubuntu 22.04 due to it being easy to set up, but if you're feeling adventurous you can try a Linux distro of your choosing, just note some commands may be different if you pick another distro.
+
+If you want to deploy in a different region, add `--region=` to the region you want to launch in. Alternatively, if you are using the CloudShell it will default to whatever region is selected in the AWS Console.
 
 ```bash
-aws ec2 describe-images --output json --region="us-west-1" \
+aws ec2 describe-images --output json \
 --owners amazon \
 --filters "Name=name,Values=ubuntu*22.04*server*" "Name=architecture,Values=x86_64" \
 --query "sort_by(Images, &CreationDate)[-1].{Name: Name, ImageId: ImageId}"
@@ -62,7 +66,7 @@ Make a note of the `ImageID`, we will need this later
 *Breakdown of the `describe-images` command*
 * \-\-owners = who owns the image, for example 'self' for your images or 'amazon' for official images
 * \-\-filters = getting only the info we are looking for
-    * name - filters based on the image name and uses wildcards to fill in the unknown.
+    * name - filters based on the image name and uses wild-cards to fill in the unknown.
         * ubuntu = name of OS
         * 22.04 = release version of the OS
         * server = find only the server version and not the minimal or pro versions.
@@ -75,9 +79,11 @@ If you want to learn more here is a useful article from the makers of Ubuntu goi
 
 https://ubuntu.com/tutorials/search-and-launch-ubuntu-22-04-in-aws-using-cli#1-overview
 
-**Create new SSH keys**
+### Create new SSH keys
 
 To securely access the EC2 instance we need to create an SSH key.
+
+If you already have an SSH key you can [skip](#create-security-group) to the next step, just make sure to replace `--key-name "cdkDevEnvKey"` with the name of your key when starting the instance.
 
 *Note: If you are using powershell change the `--output text` value to `| out-file -encoding ascii -filepath cdkDevEnvKey.pem`*.
 
@@ -90,7 +96,7 @@ aws ec2 create-key-pair \
 
 This will create a new Private key called cdkDevEnvKey.pem that will be saved in the current directory.
 
-Treat this key like you would any other password or secret and store it somewhere safe. 
+Treat this key like you would any other password or secret and store it somewhere safe.
 
 If you are on Linux or Mac OS change the permissions of the key so only your user account can access it.
 
@@ -111,7 +117,7 @@ mkdir ~/.ssh/
 chmod 700 ~/.ssh
 ```
 
-**Create security group**
+### Create security group
 
 We need to create a security group that lets you SSH in from your local computer to the EC2 instance.
 
@@ -144,26 +150,9 @@ aws ec2 authorize-security-group-ingress \
   --cidr <your IP>/32
 ```
 
-**Spin up a new EC2 instance**
-
-Put the `ImageId` from the previous command as the value for `--image-id`.
-
-*Make sure to write down the "InstanceId" from the command output.*
-
-```bash
-aws ec2 run-instances \
-  --image-id "<put the ImageID from the describe-images command here>" \
-  --count 1 \
-  --key-name cdkDevEnvKey \
-  --security-groups "sshFromMyIP" \
-  --instance-type t3a.medium
-```
-
-*If you want to use Graviton change instance-type to t4g.medium*
-
 ### Create admin IAM role
 
-The CDK dev enviroment needs access to deploy infrastructure into the AWS account. Typically this is done by creating a user account with programatic access, however since we are running an EC2 instance in the account we want to deploy into we can simply give it an IAM role that grants it access to deploy infrastructure and avoid having to handle secret access keys.
+The CDK dev environment needs access to deploy infrastructure into the AWS account. Typically this is done by creating a user account with programmatic access, however since we are running an EC2 instance in the account we want to deploy into we can simply give it an IAM role that grants it access to deploy infrastructure and avoid having to handle secret access keys.
 
 Create a policy file to tell the role only EC2 can use it.
 
@@ -195,27 +184,38 @@ aws iam add-role-to-instance-profile \
   --role-name CDK-EC2-ADMIN
 ```
 
-Give it admin access.
+Give the role admin access.
 
 ```bash
 aws iam attach-role-policy \
   --role-name CDK-EC2-ADMIN \
-  --policy-arn arn:aws:iam::aws:policy/AWSThinkboxDeadlineSpotEventPluginWorkerPolicy 
+  --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 ```
 
-Assign the new IAM role to our new EC2 instance.
+### Spin up a new EC2 instance
+
+Put the `ImageId` from the previous command as the value for `--image-id`.
 
 ```bash
-aws ec2 associate-iam-instance-profile \
-  --iam-instance-profile Name=CDK-EC2-ADMIN-PROFILE \
-  --instance-id <the ID of the instance you created>
+aws ec2 run-instances \
+  --image-id "<put the ImageID from the describe-images command here>" \
+  --count 1 \
+  --key-name cdkDevEnvKey \
+  --security-groups "sshFromMyIP" \
+  --instance-type t3a.medium \
+  --iam-instance-profile Name="CDK-EC2-ADMIN-PROFILE" \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value="CDK Development Environment"}]'
 ```
+
+*If you want to use Graviton change instance-type to t4g.medium*
 
 The set up of the EC2 instance is now finished, once in the instance spun up you can SSH in.
 
-## Configuring EC2 instance
+---
 
-Start with updating the system
+## Configure development environment
+
+Start with updating the system.
 
 ```bash
 sudo apt update
@@ -223,6 +223,7 @@ sudo apt upgrade -y
 ```
 
 CDK requires Node.js so lets install it from [nodesource](https://github.com/nodesource/distributions#ubuntu-versions).
+
 ```bash
 # Download and import the Nodesource GPG key
 sudo apt-get install -y ca-certificates curl gnupg
@@ -230,7 +231,7 @@ sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
 # Set version to install
-NODE_MAJOR=18
+NODE_MAJOR=20
 
 # Create deb repository
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
@@ -243,14 +244,14 @@ sudo apt-get install nodejs -y
 Install the AWS CLI
 
 ```bash
-sudo apt install awscli
+sudo apt install awscli -y
 ```
 
 Install Python's pip package manager and Python virtual environments
 
 ```bash
-sudo apt install python3-pip
-sudo apt install python3-venv
+sudo apt install python3-pip -y
+sudo apt install python3-venv -y
 ```
 
 We need to set some environment variables so the dev environment knows the default location to deploy AWS resources.
@@ -258,7 +259,7 @@ We need to set some environment variables so the dev environment knows the defau
 export CDK_DEFAULT_ACCOUNT=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"accountId"\s*:\s*"(.*)".*/\1/p')
 export CDK_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"region"\s*:\s*"(.*)".*/\1/p')
 export INSTANCE_ID=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"instanceId"\s*:\s*"(.*)".*/\1/p')
-export CDK_DEFAULT_VPC=$(aws ec2 describe-instances --instance-id $INSTANCE_ID --query 'Reservations[0].Instances[0].NetworkInterfaces[0].VpcId' | tr -d '"')
+export CDK_DEFAULT_VPC=$(aws ec2 describe-instances --region $CDK_DEFAULT_REGION --instance-id $INSTANCE_ID --query 'Reservations[0].Instances[0].NetworkInterfaces[0].VpcId' | tr -d '"')
 echo "# CDK environment variables" >> $HOME/.bashrc
 echo "export CDK_DEFAULT_ACCOUNT=$CDK_DEFAULT_ACCOUNT" >> $HOME/.bashrc
 echo "export CDK_DEFAULT_REGION=$CDK_DEFAULT_REGION" >> $HOME/.bashrc
@@ -288,17 +289,17 @@ sudo apt-get update
 sudo apt-get install nodejs -y
 
 # AWS CLI
-sudo apt install awscli
+sudo apt install awscli -y
 
 # Python
-sudo apt install python3-pip
-sudo apt install python3-venv
+sudo apt install python3-pip -y
+sudo apt install python3-venv -y
 
 # set account ID env var
 export CDK_DEFAULT_ACCOUNT=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"accountId"\s*:\s*"(.*)".*/\1/p')
 export CDK_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"region"\s*:\s*"(.*)".*/\1/p')
 export INSTANCE_ID=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | sed -nE 's/.*"instanceId"\s*:\s*"(.*)".*/\1/p')
-export CDK_DEFAULT_VPC=$(aws ec2 describe-instances --instance-id $INSTANCE_ID --query 'Reservations[0].Instances[0].NetworkInterfaces[0].VpcId' | tr -d '"')
+export CDK_DEFAULT_VPC=$(aws ec2 describe-instances --region $CDK_DEFAULT_REGION --instance-id $INSTANCE_ID --query 'Reservations[0].Instances[0].NetworkInterfaces[0].VpcId' | tr -d '"')
 
 echo "# CDK environment variables" >> $HOME/.bashrc
 echo "export CDK_DEFAULT_ACCOUNT=$CDK_DEFAULT_ACCOUNT" >> $HOME/.bashrc
@@ -309,7 +310,7 @@ echo "export CDK_DEFAULT_VPC=$CDK_DEFAULT_VPC" >> $HOME/.bashrc
 sudo npm install -g aws-cdk
 ```
 
-Now that you know what all the parts of the script do you could use it as a user data script when launching the EC2 instance so it automatically sets up the enviornment.
+Now that you know what all the parts of the script, you could use it as a [user data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) script when launching the EC2 instance so it automatically sets up the environment.
 
 ---
 
@@ -335,7 +336,7 @@ There are 2 options to add a new ssh connection.
 
 The command pallet will open and ask for the SSH command to run to access the remote system.
 
-Enter `ssh <username>@<ip address> -A` as the ssh command. If you are using ubuntu the username will be ubuntu.
+Enter `ssh -i <path to ssh key> <username>@<ip address> -A` as the ssh command. If you are using ubuntu the username will be ubuntu.
 
 ![vs code install ssh extension](/posts/aws-cdk-cloud-dev-env/vscode-ssh-remote-server-address.png)
 
@@ -349,7 +350,7 @@ Type in `>add new ssh host` then hit enter.
 
 Enter the ssh command to access the remote system, same as option 1. 
 
-`ssh <username>@<ip address> -A`
+`ssh -i <path to ssh key> <username>@<ip address> -A`
 
 ![vs code install ssh extension](/posts/aws-cdk-cloud-dev-env/vscode-ssh-remote-server-address.png)
 
@@ -359,26 +360,75 @@ For example if your username is 'luigi' and you are using Linux save the config 
 
 ![vs code ssh save config location](/posts/aws-cdk-cloud-dev-env/vscode-ssh-save-config-location.png)
 
+You may need to hit the refresh button for the new connection to show up.
+
+![vs code ssh refresh connections](/posts/aws-cdk-cloud-dev-env/vscode-ssh-refresh-connections-sidebar.png)
+
+If you need to edit the connection you can hit the gear icon and open the settings file.
+
+![vs code ssh edit connections](/posts/aws-cdk-cloud-dev-env/vscode-ssh-edit-connections-sidebar.png)
+
+You can now connect to the EC2 instance by clicking the arrow icon.
+
+![vs code ssh connect](/posts/aws-cdk-cloud-dev-env/vscode-ssh-connect.png)
+
 ## New CDK project quick start
 
-Create a new folder with the name of the cdk project you want to make, then change into it.
+In VS Code at the top menu bar click on `Terminal -> New Terminal` to open a new terminal panel.
+
+Create a new folder with the name of the CDK project you want to make, then change into it.
+
 ```bash
 mkdir cdk-project
 cd "$_"
 ```
 
+Initialise a new cdk project.
 
 ```bash
 cdk init --language typescript
 ```
 
-If you want to learn more about CDK there is an excelent workshop here. https://cdkworkshop.com/
+If you want to learn more about CDK there is an excellent workshop here. https://cdkworkshop.com/
+
+---
 
 ## Optional extras
 
 ### RFDK (Render Farm Deployment Kit)
 
+RFDK lets you quickly deploy a Deadline render farm in the cloud. RFDK is built on top of CDK so you already have everything you need to get started.
+
+[Here is a template to help get your render farm up and running quickly.](https://github.com/FX-Wizard/deadline-rfdk-template)
+
 ### Adding Terraform
+
+You can learn more about Terraform [here](https://developer.hashicorp.com/terraform).
+
+Install the CLI. 
+
+```bash
+sudo apt install -y gnupg software-properties-common
+
+# install HashiCorp GPG key
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+# add HashiCorp repo to the system
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update
+sudo apt install terraform -y
+```
+
+Install CDKTF (CDK for Terraform)
+
+```bash
+sudo npm install --global cdktf-cli@latest
+```
 
 ### Git
 
@@ -389,6 +439,7 @@ git config --global user.name "Your Name"
 git config --global user.email "youremail@yourdomain.com"
 ```
 
+---
 
 ## What next?
 
