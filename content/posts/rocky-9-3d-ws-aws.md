@@ -134,7 +134,7 @@ sudo depmod -a
 Install dependencies for the driver.
 
 ```bash
-sudo dnf install -y make gcc elfutils-libelf-devel libglvnd-devel kernel-devel-$(uname -r)
+sudo dnf install -y make gcc elfutils-libelf-devel libglvnd-devel dkms kernel-devel-$(uname -r)
 ```
 
 *NOTE: If you get an error such as `Error: Unable to find a match: kernel-devel` you might need to reboot to load the updated kernel.*
