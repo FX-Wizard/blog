@@ -25,11 +25,11 @@ Open the Deadline Monitor and in the top menu bar click
 
 Tools -> Download Integrated Submission Scripts...
 
-![deadline download submitter script 1](/posts/blender-deadline/deadline-get-submitter-1.png)
+![deadline download submitter script 1](/posts/blender-deadline-addon/deadline-get-submitter-1.png)
 
 Select Blender check box, then in the 'Download To' field enter the path to where you want to download the submitters. Then Click 'OK'
 
-![deadline download submitter script 2](/posts/blender-deadline/deadline-get-submitter-2.png)
+![deadline download submitter script 2](/posts/blender-deadline-addon/deadline-get-submitter-2.png)
 
 This will create a folder in the select destination called `submission` that contains the submitter scripts
 
@@ -61,19 +61,19 @@ Use add-ons menu to install the python script
 
 Go to Edit -> Preferences
 
-![blender preferences menu](/posts/blender-deadline/blender-deadline-preferences-menu.png)
+![blender preferences menu](/posts/blender-deadline-addon/blender-deadline-preferences-menu.png)
 
 In the preferences window click 'Add-ons' then click 'Install...'
 
-![blender preferences add-ons window](/posts/blender-deadline/blender-preferences-addons.png)
+![blender preferences add-ons window](/posts/blender-deadline-addon/blender-preferences-addons.png)
 
 In the File View window navigate to where you downloaded the submitter script. Within the downloaded submitter open submission/Blender/Client/DeadlineBlenderClient.py then click 'Install Add-on'
 
-![blender deadline add-on](/posts/blender-deadline/blender-deadline-addon.png)
+![blender deadline add-on](/posts/blender-deadline-addon/blender-deadline-addon.png)
 
 With the add-on installed, search for 'deadline' and tick 'Submit Blender To Deadline' to enable the add-on in Blender
 
-![blender enable deadline add-on](/posts/blender-deadline/blender-deadline-enable-addon.png)
+![blender enable deadline add-on](/posts/blender-deadline-addon/blender-deadline-enable-addon.png)
 
 
 ### Copy script to script directory
@@ -82,7 +82,7 @@ The advantage of this method is it can be set anywhere, including on a shared dr
 
 set script path in preferences
 
-![blender script path setting](/posts/blender-deadline/blender-deadline-script-paths.png)
+![blender script path setting](/posts/blender-deadline-addon/blender-deadline-script-paths.png)
 
 In this example the blender scripts are being stored in a folder called scripts.
 
@@ -97,7 +97,7 @@ scripts /
 
 If done correctly Blender will be able to find the add-on and you can enable it in the add-ons preferences window.
 
-![blender enable deadline add-on](/posts/blender-deadline/blender-deadline-enable-addon.png)
+![blender enable deadline add-on](/posts/blender-deadline-addon/blender-deadline-enable-addon.png)
 
 
 ### Installer add-on installation
@@ -112,6 +112,6 @@ Deadline also provides a handy installer. Assuming the application is using the 
 
 Once the submitter is installed you can submit a scene 
 
-![blender submit render to deadline menu](/posts/blender-deadline/blender-deadline-submit-render-menu.png)
+![blender submit render to deadline menu](/posts/blender-deadline-addon/blender-deadline-submit-render-menu.png)
 
-![deadline submitter window](/posts/blender-deadline/blender-deadline-submitter-window.png)
+![deadline submitter window](/posts/blender-deadline-addon/blender-deadline-submitter-window.png)
