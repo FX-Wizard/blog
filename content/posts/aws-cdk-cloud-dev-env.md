@@ -23,7 +23,7 @@ The EC2 instance will be deployed in the default [VPC](https://docs.aws.amazon.c
 
 **Why not AWS Cloud9?**
 
-This is more my personal option, I find it easier to work in VS Code for writing CDK.
+This is more my personal opinion, I find it easier to work in VS Code for writing CDK.
 
 Some advantages to VS Code over Cloud9.
 - Vast ecosystem of extensions.
@@ -401,6 +401,8 @@ RFDK lets you quickly deploy a Deadline render farm in the cloud. RFDK is built 
 
 [Here is a template to help get your render farm up and running quickly.](https://github.com/FX-Wizard/deadline-rfdk-template)
 
+[To dive deeper into getting started with RFDK you can check out the official getting started guide here.](https://docs.aws.amazon.com/rfdk/latest/guide/first-rfdk-app.html)
+
 ### Adding Terraform
 
 You can learn more about Terraform [here](https://developer.hashicorp.com/terraform).
@@ -442,5 +444,7 @@ git config --global user.email "youremail@yourdomain.com"
 ---
 
 ## What next?
+
+If your still hungry for more you can check out this amazing workshop that guides you step by step in using CDK
 
 https://cdkworkshop.com/
