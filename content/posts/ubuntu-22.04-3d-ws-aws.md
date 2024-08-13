@@ -28,12 +28,14 @@ This guide assumes you already have an EC2 instance with an Nvidia GPU running U
 
 ## Getting started
 
-Update the system
+Update the system.
 
 ```bash
 sudo apt update
 sudo apt upgrade -y
 ```
+
+*Note: It's a good idea to give the system a reboot after the update so it can load any kernel updates.*
 
 Install the AWS CLI. We will need it later for downloading software from S3.
 
@@ -80,6 +82,12 @@ Make sure to select gdm3 as the default display manager.
 ```bash
 sudo apt install kubuntu-desktop -y
 ```
+
+**Others**
+
+There are many other great desktop enviornments out there so don't be affraid to experiment!
+
+[Here is a guide on installing the Pantheon desktop enviornment from Elementary OS](/posts/mac-like-linux-workstation). If you are looking for a more Apple Mac like experience on Linux give it a try.
 
 ---
 
