@@ -132,18 +132,36 @@ Remote into the EC2 instance with SSH
 
 Install AWS CLI
 
-**Ubuntu**
+**Ubuntu 22.04**
 ```bash
 sudo apt update
 sudo apt install -y awscli
 ```
 
-**Other Linux**
+**Other Linux or newer Ubuntu**
+
+Install unzip
+
+```bash
+sudo apt install pkg-config libglvnd-dev -y
+```
+
+Download and install the AWS CLI
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
 ```
+
+Clean up install files
+```bash
+rm -rf aws awscliv2.zip
+```
+
+Check [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for the official guide if the above instructions don't work for your version of Linux
+
+
+**Downloading the driver**
 
 Download driver using the AWS CLI
 
