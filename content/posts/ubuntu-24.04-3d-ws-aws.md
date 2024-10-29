@@ -10,7 +10,8 @@ description = ""
 showFullContent = false
 readingTime = false
 hideComments = false
-color = "" #color from the theme settings
+toc = true
+color = "orange" #color from the theme settings
 +++
 
 An updated version of my old Ubuntu workstation on AWS guide, focusing on Ubuntu 24.04 running on a g6 EC2 instance.
